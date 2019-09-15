@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { connect } from "react-redux";
+import "./App.css";
+import { getUsersThunk } from "./actions/users";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  componentDidMount(){
+    this.handleFetchUsers();    
+  }
+
+  handleFetchUsers(){
+    this.props.dispatch(getUsersThunk())
+  }
+  
+  render() {
+    return (
+      <div className="App">
+        {
+          this.props.getUsers.data.map((v) => {
+            return (
+              <ul>
+                <li>{v.name}</li>
+              </ul>
+            )
+          })
+        }
+      </div>
+    );
+  }
 }
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    getUsers: state.getUsers,
+  };
+}
+
+export default connect(mapStateToProps)(App);
