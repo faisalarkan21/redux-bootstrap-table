@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { getResponse } from "../utils/api";
+import { getResponse, postResponse } from "../utils/api";
 
 export const FETCH_USERS = "FETCH_USERS";
 
@@ -17,5 +17,20 @@ export function getUsersThunk(params = "") {
         dispatch(fetchUsers(data));
       })
       .catch(err => err);
+  };
+}
+
+export function postUsersDeleteThunk(id = "") {
+  return dispatch => {
+    // console.log('asas')
+    return postResponse(`/delete-user`, id).catch(err => err);
+  };
+}
+
+
+export function postUsersUpdateThunk(data = "") {
+  return dispatch => {
+    // console.log('asas')
+    return postResponse(`/update-user`, data).catch(err => err);
   };
 }
