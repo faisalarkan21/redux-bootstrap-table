@@ -2,7 +2,11 @@ import moment from "moment";
 import React from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import { connect } from "react-redux";
-import { getUsersThunk, postUsersDeleteThunk, postUsersUpdateThunk } from "../actions/users";
+import {
+  getUsersThunk,
+  postUsersDeleteThunk,
+  postUsersUpdateThunk
+} from "../actions/users";
 import { Loading } from "../utils/Loading";
 import { Button, Modal, Form, Input } from "antd";
 import { ConfirmModal } from "../components/confirm-modal";
@@ -20,11 +24,10 @@ class App extends React.Component {
   }
 
   onChange = e => {
-    
     const dataTemp = { ...this.state.data };
     dataTemp[e.target.id] = e.target.value;
 
-    console.log('dataTemp', dataTemp, e.target.id)
+    console.log("dataTemp", dataTemp, e.target.id);
     this.setState({
       data: dataTemp
     });
@@ -60,8 +63,9 @@ class App extends React.Component {
           [id]: !prevState[id],
           data: data
         };
-      }, () => {
-        this.handleFetchPosts()
+      },
+      () => {
+        this.handleFetchPosts();
       }
     );
   };
@@ -92,18 +96,15 @@ class App extends React.Component {
     const { id } = this.state.data;
     this.props.dispatch(postUsersDeleteThunk({ id })).then(() => {
       // console.log('promise kena')
-      this.handleOpenModal('visible');
+      this.handleOpenModal("visible");
     });
   };
 
   handleOkUpdate = () => {
-
     this.props.dispatch(postUsersUpdateThunk(this.state.data)).then(() => {
-      this.handleOpenModal('visibleUpdate')
-    })
-
-  }
-
+      this.handleOpenModal("visibleUpdate");
+    });
+  };
 
   handleUpdate = (e, row) => {
     const { idModal } = e.currentTarget.dataset;
@@ -111,20 +112,24 @@ class App extends React.Component {
     this.handleOpenModal(idModal, row);
   };
 
-
-
-
-  handleButtonUpdate = (row) => {
-    return(
+  handleButtonUpdate = row => {
+    return (
       <Button
-      data-id-modal="visibleUpdate"
-      onClick={v =>  this.handleUpdate(v, row)}
-      type="primary"
-    >
-      Update
-    </Button>
-    )
-  }
+        data-id-modal="visibleUpdate"
+        onClick={v => this.handleUpdate(v, row)}
+        type="primary"
+      >
+        Update
+      </Button>
+    );
+  };
+
+  handleSelected = ({ id, name }) => {
+    this.props.history.push({
+      pathname: "/detail-users",
+      search: `?id=${id}&name=${name}`
+    });
+  };
 
   render() {
     console.log("this.props", this.state);
@@ -147,7 +152,10 @@ class App extends React.Component {
           value: 25
         }
       ],
-      sizePerPage: 10
+      sizePerPage: 10,
+      onRowClick: row => {
+        this.handleSelected(row);
+      }
     };
 
     return (
@@ -185,39 +193,34 @@ class App extends React.Component {
           Yakin mau buang user {data.email || ""} tersebut ?
         </ConfirmModal>
 
-
         <ConfirmModal
           title="Update User"
           visible={this.state.visibleUpdate}
           onOk={this.handleOkUpdate}
           onCancel={() => this.handleCancel("visibleUpdate")}
         >
-         
-         <Form
-          labelCol={{ span: 5 }}
-          wrapperCol={{ span: 12 }}
-        >
-          <Form.Item label="Name">
-            <Input
-              id="name"
-              value={this.state.data.name}
-              onChange={this.onChange}
-            />
-          </Form.Item>
-          <Form.Item label="Email">
-            <Input
-              id="email"
-              value={this.state.data.email}
-              onChange={this.onChange}
-            />
-          </Form.Item>
-        </Form>
+          <Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
+            <Form.Item label="Name">
+              <Input
+                id="name"
+                value={this.state.data.name}
+                onChange={this.onChange}
+              />
+            </Form.Item>
+            <Form.Item label="Email">
+              <Input
+                id="email"
+                value={this.state.data.email}
+                onChange={this.onChange}
+              />
+            </Form.Item>
+          </Form>
         </ConfirmModal>
-
 
         <BootstrapTable
           pagination
           search
+          handle
           exportCSV
           options={options}
           data={this.props.getUsers.data.users}
@@ -236,7 +239,9 @@ class App extends React.Component {
           <TableHeaderColumn dataFormat={this.handleButtonDelete}>
             Action
           </TableHeaderColumn>
-          <TableHeaderColumn dataFormat={(cell, row) => this.handleButtonUpdate(row)}>
+          <TableHeaderColumn
+            dataFormat={(cell, row) => this.handleButtonUpdate(row)}
+          >
             Update
           </TableHeaderColumn>
         </BootstrapTable>
