@@ -30,11 +30,11 @@ class SiderDemo extends React.Component {
           <div className="logo" />
           <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
             <Menu.Item key="1" onClick={() => this.handlePushRoutes("users")}>
-              <Icon type="pie-chart" />
+              <Icon type="user" />
               <span>Users</span>
             </Menu.Item>
             <Menu.Item key="2" onClick={() => this.handlePushRoutes("posts")}>
-              <Icon type="desktop" />
+              <Icon type="snippets" />
               <span>Posts</span>
             </Menu.Item>
             <SubMenu
@@ -77,9 +77,9 @@ class SiderDemo extends React.Component {
             </Breadcrumb>
             {this.props.children}
           </Content>
-          <Footer style={{ textAlign: "center" }}>
+          {/* <Footer style={{ textAlign: "center" }}>
             Ant Design ©2018 Created by Ant UED
-          </Footer>
+          </Footer> */}
         </Layout>
       </Layout>
     );

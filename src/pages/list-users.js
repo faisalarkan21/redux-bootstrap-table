@@ -34,10 +34,10 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    this.handleFetchPosts();
+    this.handleFetchUsers();
   }
 
-  handleFetchPosts(npp = this.state.npp, page = this.state.page) {
+  handleFetchUsers(npp = this.state.npp, page = this.state.page) {
     this.props.dispatch(getUsersThunk(`?npp=${npp}&page=${page}`));
   }
 
@@ -65,7 +65,7 @@ class App extends React.Component {
         };
       },
       () => {
-        this.handleFetchPosts();
+        this.handleFetchUsers();
       }
     );
   };
@@ -131,9 +131,15 @@ class App extends React.Component {
     });
   };
 
+  onPageChange = page => {
+    this.setState({ page }, () => {
+      this.handleFetchUsers();
+    });
+  };
+
   render() {
     console.log("this.props", this.state);
-
+    const { page } = this.state;
     const { data } = this.state;
 
     if (this.props.getUsers.data.users <= 0) {
@@ -141,21 +147,9 @@ class App extends React.Component {
     }
 
     const options = {
-      onPageChange: this.onPageChange,
-      sizePerPageList: [
-        {
-          text: "10",
-          value: 10
-        },
-        {
-          text: "25",
-          value: 25
-        }
-      ],
-      sizePerPage: 10,
-      onRowClick: row => {
-        this.handleSelected(row);
-      }
+      page,
+      sizePerPage: 5,
+      onPageChange: this.onPageChange
     };
 
     return (

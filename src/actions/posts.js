@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { getResponseMock } from "../utils/api";
+import { getResponseMock, getResponse } from "../utils/api";
 
 export const FETCH_POSTS = "FETCH_POSTS";
 
@@ -12,7 +12,7 @@ export function fetchposts(data) {
 
 export function getPostsThunk(params = "") {
   return dispatch => {
-    return getResponseMock(`/posts${params}`)
+    return getResponse(`/posts${params}`)
       .then(data => {
         dispatch(fetchposts(data));
       })
